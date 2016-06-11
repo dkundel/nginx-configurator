@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const inquirer = require('inquirer');
+const program = require('commander');
+const chalk = require('chalk');
+
+const pkg = require('../package.json');
+const generateConfig = require('../index.js');
+
+const successColor = chalk.bold.green;
+const errorColor = chalk.bold.red;
+const infoColor = chalk.bold.cyan;
+
+const success = successColor('SUCCESS');
+const error = errorColor('ERROR');
+const info = infoColor('INFO');
+
+let configFile;
+
+program
+  .version(pkg.version)
+  .arguments('[conf]')
+  .option('-d --dir <dir>', 'Nginx base directory (default: /etc/nginx)')
+  .option('-n --name <confName>', 'Nginx config file name to generate (default: ngxconf.conf)')
+  .action(conf => {
+    configFile = conf
+  })
+  .parse(process.argv);
+
+
+let options = {
+  nginxDirectory: program.dir,
+  confName: program.confName,
+  config: configFile
+};
+
+console.log(`${info} Start generating config`);
+generateConfig(options).then((confPath) => {
+  console.log(`${success} Generated config at "${confPath}"`);
+}).catch((err) => {
+  console.error(`${error} Failed to generate due to "${err.message}"`);
+})

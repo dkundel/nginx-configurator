@@ -1,0 +1,35 @@
+{
+  "ssl_dhparam": "/etc/ssl/certs/dhparam.pem",
+  "ssl": {
+    "hackathon.wtf": {
+      "certDomain": "hackathon.wtf",
+      "webroot": "/foo"
+    }
+  },
+  "hosts": [
+    {
+      "serverNames": ["foo.bar", "bla.foo.bar"],
+      "proxy": 8080,
+      "naxi": true,
+      "snippets": ["snippets/foo.conf"]
+    },
+    {
+      "serverNames": [],
+      "ssl": "hackathon.wtf",
+      "http2": true,
+      "root": "/var/www/foo",
+      "locations": [
+        {
+          "path": "/",
+          "root": "/var/www/foo",
+          "auth": "/etc/nginx/.htpasswd"
+        },
+        {
+          "path": "/foo",
+          "root": "/var/www/bar",
+          "auth": "/etc/nginx/.htpasswd"
+        }
+      ]
+    }
+  ]
+}
